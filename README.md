@@ -4,7 +4,7 @@
 
 ## 安装
 
-1. 从 [Releases](https://github.com/openai1998/STranslate.Plugin.Tts.Volcengine/releases) 下载最新的 `.spkg`
+1. 从 [Releases](https://github.com/asasa8788/STranslate.Plugin.Tts.Volcengine/releases) 下载最新的 `.spkg`
 2. STranslate → **设置** → **插件** → **安装插件**
 3. 选择 `.spkg` 并重启 STranslate
 4. 在 TTS 服务中添加 **火山 TTS**
