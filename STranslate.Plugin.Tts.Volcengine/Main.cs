@@ -32,9 +32,20 @@ public class Main : ITtsPlugin
         var segments = VolcTtsProtocol.SplitText(text);
         foreach (var segment in segments)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var audio = await SynthesizeAsync(segment, cancellationToken);
+            byte[] audio;
+            try
+            {
+                audio = await SynthesizeAsync(segment, cancellationToken);
+            }
+            catch (Exception ex) when (ex is not TaskCanceledException)
+            {
+                // 宿主捕获异常时只弹通用「TTS 失败」，不会展示 ex.Message，
+                // 所以这里自己把具体原因推给用户，同时写日志。
+                var reason = DescribeFailure(ex is InvalidOperationException ? ex.Message : null, segment);
+                Context.Logger.LogError(ex, reason);
+                Context.Snackbar.ShowError(reason);
+                return;
+            }
 
             // 火山固定返回带 ID3 头的 MP3（24 kHz 单声道），显式声明格式，不让宿主猜测
             await Context.AudioPlayer.PlayAsync(new AudioData(audio, AudioFormat.Mp3), cancellationToken);

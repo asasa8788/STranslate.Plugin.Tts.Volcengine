@@ -158,8 +158,12 @@ internal static class VolcTtsProtocol
             return "invalid-json";
         }
 
+        if (root is null)
+            return "invalid-json";
+
+        // base_resp 缺失时不做失败判定，交给下面的音频数据检查兜底
         var statusCode = root?["base_resp"]?["status_code"]?.GetValue<int>();
-        if (statusCode is not 0)
+        if (statusCode is not (null or 0))
         {
             var message = root?["base_resp"]?["status_message"]?.ToString();
             return string.IsNullOrWhiteSpace(message) ? $"status-{statusCode}" : message;

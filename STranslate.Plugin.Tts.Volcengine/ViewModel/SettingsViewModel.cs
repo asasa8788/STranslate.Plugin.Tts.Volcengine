@@ -55,7 +55,11 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         using var _ = new UpdateGuard(this);
         if (Speakers.All(s => s.Id != speakerId))
             Speakers.Add(new SpeakerItem(speakerId, speakerId));
+
+        // UpdateGuard 会屏蔽属性变更回写，这里必须显式落盘，否则新增音色不会被持久化
         Speaker = speakerId;
+        _settings.Speaker = speakerId;
+        _context.SaveSettingStorage<Settings>();
     }
 
     [RelayCommand]
@@ -70,8 +74,14 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
 
         using var _ = new UpdateGuard(this);
         if (Speaker == speakerId)
+        {
+            // 同上：删除当前音色时要显式回落到「自动」并落盘
             Speaker = VolcTtsProtocol.AutoSpeakerId;
+            _settings.Speaker = VolcTtsProtocol.AutoSpeakerId;
+        }
+
         Speakers.Remove(item);
+        _context.SaveSettingStorage<Settings>();
     }
 
     [RelayCommand]
@@ -129,9 +139,6 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
 
         _context.SaveSettingStorage<Settings>();
     }
-
-    internal void BeginUpdate() => _isUpdating = true;
-    internal void EndUpdate() => _isUpdating = false;
 
     private readonly struct UpdateGuard : IDisposable
     {
