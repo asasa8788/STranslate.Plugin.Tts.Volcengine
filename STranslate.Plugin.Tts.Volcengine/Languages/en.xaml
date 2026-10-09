@@ -1,0 +1,17 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Speaker">Voice</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Speaker_Description">Leave it as Auto and the service picks a voice matching the text language (Chinese, English, Japanese, Korean, French, Spanish, German, Italian, Portuguese, Turkish, Vietnamese, Malay, Indonesian). Pick a specific voice to lock it for all languages.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_SpeakerAuto">Auto (follow text language)</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Url_Description">Synthesis endpoint. Only change this if the default endpoint stops working.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Timeout">Timeout (seconds)</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Timeout_Description">Timeout for a single synthesis request. Long text is split and requested segment by segment.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_EmptyResponse">Volcengine returned an empty response.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_InvalidJson">Volcengine returned a response that could not be parsed.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_EmptyAudio">Volcengine returned no audio data.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_UnknownError">Volcengine TTS failed.</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_UnsupportedCyrillic">Volcengine TTS does not support Russian (its only Russian voice has been retired).</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_UnsupportedArabic">Volcengine TTS does not support Arabic (its only Arabic voice has been retired).</sys:String>
+</ResourceDictionary>

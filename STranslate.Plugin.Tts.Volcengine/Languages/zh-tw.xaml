@@ -1,0 +1,17 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Speaker">音色</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Speaker_Description">保持「自動」時，服務端會按文本語言自動選擇音色（中、英、日、韓、法、西、德、意、葡、土耳其、越南、馬來、印尼）。選擇具體音色後，所有語言都固定使用該音色。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_SpeakerAuto">自動（跟隨文本語言）</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Url_Description">合成端點。默認端點失效時才需要修改。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Timeout">超時（秒）</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_Timeout_Description">單次合成請求的超時時間。超長文本會分段依次請求。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_EmptyResponse">火山傳回了空回應。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_InvalidJson">火山回傳的回應無法解析。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_EmptyAudio">火山未回傳音訊資料。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_UnknownError">火山語音合成失敗。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_UnsupportedCyrillic">火山 TTS 暫不支援俄語（唯一的俄語音色已下線）。</sys:String>
+    <sys:String x:Key="STranslate_Plugin_Tts_Volcengine_UnsupportedArabic">火山 TTS 暫不支援阿拉伯語（唯一的阿拉伯語音色已下線）。</sys:String>
+</ResourceDictionary>

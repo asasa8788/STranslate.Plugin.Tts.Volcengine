@@ -1,0 +1,10 @@
+{
+  "PluginID": "e635a0ffc0104e35a32ac8d572bff3dc",
+  "Name": "Volcengine TTS",
+  "Description": "Volcengine (火山) TTS plugin for STranslate. No API key required.",
+  "Author": "openai1998",
+  "Version": "1.0.0",
+  "Website": "https://github.com/openai1998/STranslate.Plugin.Tts.Volcengine",
+  "ExecuteFileName": "STranslate.Plugin.Tts.Volcengine.dll",
+  "IconPath": "icon.png"
+}

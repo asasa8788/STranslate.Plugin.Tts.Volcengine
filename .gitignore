@@ -1,0 +1,10 @@
+.vs/
+bin/
+obj/
+*.user
+.idea/
+.artifacts/
+*.spkg
+*.nupkg
+*.pdb
+.DS_Store
