@@ -21,7 +21,10 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         _main = main;
 
         Url = settings.Url;
-        Speaker = settings.Speaker;
+
+        // 旧配置里可能残留被污染的展示文本（会被服务端判 400），加载时就地清洗
+        Speaker = VolcTtsProtocol.NormalizeSpeakerId(settings.Speaker);
+        settings.Speaker = Speaker;
         Speakers = new ObservableCollection<SpeakerItem>(settings.Speakers);
         TimeoutSeconds = settings.TimeoutSeconds;
 
@@ -40,6 +43,10 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     public SpeakerItem AutoSpeaker { get; }
 
     [ObservableProperty] public partial string Url { get; set; } = string.Empty;
+
+    /// <summary>
+    ///     当前音色 ID。永远只存 ID，绝不存展示文本。
+    /// </summary>
     [ObservableProperty] public partial string Speaker { get; set; } = VolcTtsProtocol.AutoSpeakerId;
     [ObservableProperty] public partial ObservableCollection<SpeakerItem> Speakers { get; set; } = [];
     [ObservableProperty] public partial int TimeoutSeconds { get; set; } = 30;
@@ -129,6 +136,9 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
                 _settings.Url = Url;
                 break;
             case nameof(Speaker):
+                // 防御：可编辑 ComboBox 失焦时可能把展示文本写进 Speaker，
+                // 这里做一次归一化，确保落盘的永远是合法音色 ID（或空=自动）。
+                Speaker = NormalizeSpeakerId(Speaker);
                 _settings.Speaker = Speaker;
                 break;
             case nameof(TimeoutSeconds):
@@ -139,6 +149,39 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         }
 
         _context.SaveSettingStorage<Settings>();
+    }
+
+    /// <summary>
+    ///     把可能是展示文本的值归一化为合法音色 ID。
+    /// </summary>
+    /// <remarks>
+    ///     可编辑 ComboBox 在 IsEditable=True 时，SelectedValue 偶发会取到 Text（即 ToString() 结果）。
+    ///     一旦把展示文本当 speaker 发给火山，服务端直接返回 base_resp 400。
+    ///     这里做兜底：命中已知音色就还原成 ID，命中「自动」就还原成空，其余原样保留（允许用户手写自定义 ID）。
+    /// </remarks>
+    internal string NormalizeSpeakerId(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return VolcTtsProtocol.AutoSpeakerId;
+
+        var trimmed = value.Trim();
+
+        // 命中列表里的音色（按 ID 或展示名匹配）
+        foreach (var item in Speakers)
+        {
+            if (string.Equals(item.Id, trimmed, StringComparison.Ordinal))
+                return item.Id;
+
+            if (!string.IsNullOrWhiteSpace(item.Name) &&
+                (trimmed == item.Name || trimmed == item.ToString() || trimmed.EndsWith(" · " + item.Id, StringComparison.Ordinal)))
+                return item.Id;
+        }
+
+        // 「自动（跟随文本语言）」的各种形态
+        if (trimmed.StartsWith(AutoSpeaker.Name, StringComparison.Ordinal))
+            return VolcTtsProtocol.AutoSpeakerId;
+
+        return trimmed;
     }
 
     private readonly struct UpdateGuard : IDisposable

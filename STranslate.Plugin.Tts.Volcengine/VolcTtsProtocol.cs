@@ -100,6 +100,30 @@ internal static class VolcTtsProtocol
     ];
 
     /// <summary>
+    ///     归一化音色 ID。只放行合法形态，其余返回空（= 自动）。
+    /// </summary>
+    internal static string NormalizeSpeakerId(string? speaker)
+    {
+        if (string.IsNullOrWhiteSpace(speaker))
+            return AutoSpeakerId;
+
+        var id = speaker.Trim();
+
+        // 内置音色白名单
+        if (DefaultSpeakers.Any(s => string.Equals(s.Id, id, StringComparison.Ordinal)))
+            return id;
+
+        // 自定义音色只接受两类形态：
+        //   zh_male_xxx / en_female_xxx / jp_... / id_female_... 等下划线式
+        //   tts.other.BV###_streaming
+        var looksLikeVoiceId = System.Text.RegularExpressions.Regex.IsMatch(
+            id, "^(tts\\.other\\.[A-Za-z0-9]+(_[A-Za-z0-9]+)*|[a-z]{2,3}_[A-Za-z0-9_]+)$",
+            System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
+        return looksLikeVoiceId ? id : AutoSpeakerId;
+    }
+
+    /// <summary>
     ///     构造请求选项（浏览器伪装头 + 超时）。
     /// </summary>
     internal static Options CreateOptions(int timeoutSeconds)
@@ -136,8 +160,11 @@ internal static class VolcTtsProtocol
     {
         var request = new JsonObject { ["text"] = text };
 
-        if (!string.IsNullOrWhiteSpace(speaker) && speaker != AutoSpeakerId)
-            request["speaker"] = speaker.Trim();
+        // 只接受已知音色 ID 或形如 xxx / tts.other.BV###_streaming 的自定义 ID；
+        // 其余（尤其是展示名）一律丢弃，回落到「自动」，避免服务端返回 400。
+        var normalized = NormalizeSpeakerId(speaker);
+        if (!string.IsNullOrEmpty(normalized))
+            request["speaker"] = normalized;
 
         return request;
     }

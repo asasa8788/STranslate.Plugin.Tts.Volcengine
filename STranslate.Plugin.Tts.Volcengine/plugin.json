@@ -3,7 +3,7 @@
   "Name": "Volcengine TTS",
   "Description": "Volcengine (火山) TTS plugin for STranslate. No API key required.",
   "Author": "asasa8788",
-  "Version": "1.0.0",
+  "Version": "1.0.2",
   "Website": "https://github.com/asasa8788/STranslate.Plugin.Tts.Volcengine",
   "ExecuteFileName": "STranslate.Plugin.Tts.Volcengine.dll",
   "IconPath": "icon.png"
