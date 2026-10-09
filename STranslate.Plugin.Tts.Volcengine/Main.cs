@@ -1,3 +1,5 @@
+using STranslate.Plugin.Tts.Volcengine.View;
+using STranslate.Plugin.Tts.Volcengine.ViewModel;
 using System.Windows.Controls;
 
 namespace STranslate.Plugin.Tts.Volcengine;
