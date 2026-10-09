@@ -115,7 +115,14 @@ internal static class VolcTtsProtocol
                 { "sec-fetch-mode", "cors" },
                 { "sec-fetch-site", "none" },
                 { "cookie", "hasUserBehavior=1" },
-                { "user-agent", UserAgent }
+                { "user-agent", UserAgent },
+
+                // ★ 必须显式声明不接受压缩。
+                // 宿主 HttpClient 的 SocketsHttpHandler 未开启 AutomaticDecompression，
+                // 而 SocketsHttpHandler 默认会发出 Accept-Encoding: gzip, deflate, br，
+                // 火山会因此返回 Brotli(br) 响应，宿主解压不了，
+                // 插件读到的是压缩字节，JsonNode.Parse 失败 -> 表现为 status-400。
+                { "accept-encoding", "identity" }
             },
             ContentType = "application/json",
             Timeout = TimeSpan.FromSeconds(Math.Clamp(timeoutSeconds <= 0 ? 30 : timeoutSeconds, 5, 120))
